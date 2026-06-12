@@ -16,10 +16,12 @@ public class HallwayManager : MonoBehaviour
     public Axe axeCouloir = Axe.X;
 
     [Header("Effet de désespoir")]
-    [Range(0f, 1f)] public float ratioInitial = 0.85f;
-    [Range(0f, 1f)] public float ratioFinal = 0f;
+    [Tooltip("Distance totale que le couloir va parcourir (en unités Unity)")]
+    public float deplacementTotal = 10f;
+    [Tooltip("Durée (en secondes de marche) pour parcourir cette distance")]
     public float dureeDesespoir = 20f;
 
+    private Vector3 posDepart;
     private Vector3 dernierePosJoueur;
     private float tempsMarche = 0f;
     private bool actif = false;
@@ -31,6 +33,7 @@ public class HallwayManager : MonoBehaviour
 
     void Start()
     {
+        posDepart = couloirSortie.position;
         dernierePosJoueur = joueur.position;
     }
 
@@ -66,13 +69,14 @@ public class HallwayManager : MonoBehaviour
         {
             tempsMarche += Time.deltaTime;
             float t = Mathf.Clamp01(tempsMarche / dureeDesespoir);
-            float ratio = Mathf.Lerp(ratioInitial, ratioFinal, t);
+            float offset = Mathf.Lerp(0f, deplacementTotal, t);
 
-            Vector3 deplacement = axeCouloir == Axe.X ? new Vector3(deltaAvant * ratio, 0f, 0f)
-                                : axeCouloir == Axe.Y ? new Vector3(0f, deltaAvant * ratio, 0f)
-                                : new Vector3(0f, 0f, deltaAvant * ratio);
-
-            couloirSortie.position += deplacement;
+            couloirSortie.position = posDepart + axeCouloir switch
+            {
+                Axe.X => new Vector3(offset, 0f, 0f),
+                Axe.Y => new Vector3(0f, offset, 0f),
+                _     => new Vector3(0f, 0f, offset),
+            };
         }
 
         dernierePosJoueur = joueur.position;
