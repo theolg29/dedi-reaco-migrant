@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider), typeof(AudioSource))]
+[RequireComponent(typeof(AudioSource))]
 public class PrinterAnimation : MonoBehaviour
 {
     [Header("Références")]
@@ -23,6 +23,10 @@ public class PrinterAnimation : MonoBehaviour
     [Header("Voyant LED")]
     public float vitesseClignotement = 1f;
 
+    [Header("Feuille")]
+    [Tooltip("Script sur la feuille imprimée pour activer la récupération")]
+    public FeuilleRecuperable feuilleRecuperable;
+
     [Header("Audio")]
     public AudioClip sonImpression;
 
@@ -34,22 +38,13 @@ public class PrinterAnimation : MonoBehaviour
     const float T_FIN              = 12.30f;
 
     private AudioSource sourceAudio;
-    private bool        declenche         = false;
     private bool        clignotementActif = false;
 
     void Awake()
     {
-        GetComponent<BoxCollider>().isTrigger = true;
         sourceAudio = GetComponent<AudioSource>();
         sourceAudio.playOnAwake = false;
         if (voyantLED != null) voyantLED.enabled = true;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (!other.CompareTag("Player") || declenche) return;
-        declenche = true;
-        Imprimer();
     }
 
     public void Imprimer()
@@ -102,9 +97,12 @@ public class PrinterAnimation : MonoBehaviour
         else
             yield return new WaitForSeconds(T_FIN - T_DEBUT_GROS_ACOUP);
 
-        // Phase 6 — fin : LED s'éteint fixe
+        // Phase 6 — fin : LED s'éteint fixe, feuille récupérable
         clignotementActif = false;
         if (voyantLED != null) voyantLED.enabled = true;
+
+        if (feuilleRecuperable != null)
+            feuilleRecuperable.ActiverRecuperation();
     }
 
     IEnumerator DeplacerVers(Transform feuille, Vector3 destination, float duree)
