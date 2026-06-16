@@ -8,6 +8,8 @@ public class WallSlide : MonoBehaviour
     public Transform joueur;
     [Tooltip("Le couloir de sortie (vert) à déplacer")]
     public Transform couloirSortie;
+    [Tooltip("Optionnel — effet de panique à passer en intensité max quand le couloir s'allonge")]
+    public HallwayPanicEffect effetPanique;
 
     public enum Axe { X, Y, Z }
 
@@ -43,6 +45,9 @@ public class WallSlide : MonoBehaviour
         if (!ConditionsValidees()) return;
 
         actif = true;
+
+        if (effetPanique != null)
+            effetPanique.DemarrerIntensiteMax();
     }
 
     bool ConditionsValidees()

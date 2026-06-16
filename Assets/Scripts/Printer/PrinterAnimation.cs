@@ -30,6 +30,12 @@ public class PrinterAnimation : MonoBehaviour
     [Header("Audio")]
     public AudioClip sonImpression;
 
+    [Header("Bourrage papier")]
+    [Tooltip("Délai après le début de l'impression avant que le voyant passe en orange, en secondes")]
+    public float delaiAvantBourrage = 3f;
+    [Tooltip("Couleur du voyant une fois le bourrage déclenché")]
+    public Color couleurBourrage = new Color(1f, 0.5f, 0f);
+
     // Timings calés sur le son (secondes)
     const float T_DEBUT_ASPIRATION = 4.40f;
     const float T_FIN_ASPIRATION   = 5.50f;
@@ -50,6 +56,37 @@ public class PrinterAnimation : MonoBehaviour
     public void Imprimer()
     {
         StartCoroutine(AnimationImpression());
+    }
+
+    public void ImprimerAvecBourrage()
+    {
+        StartCoroutine(AnimationBourrage());
+    }
+
+    IEnumerator AnimationBourrage()
+    {
+        if (sonImpression != null)
+        {
+            sourceAudio.clip = sonImpression;
+            sourceAudio.Play();
+        }
+
+        clignotementActif = true;
+        StartCoroutine(ClignoteVoyant());
+
+        // Aspiration de paper-vierge, comme une impression normale, mais paper-print ne sortira jamais
+        if (cibleVierge != null)
+            yield return StartCoroutine(DeplacerVers(feuilleVierge, cibleVierge.position, T_FIN_ASPIRATION - T_DEBUT_ASPIRATION));
+
+        yield return new WaitForSeconds(delaiAvantBourrage);
+
+        if (voyantLED != null)
+        {
+            voyantLED.material.EnableKeyword("_EMISSION");
+            voyantLED.material.SetColor("_EmissionColor", couleurBourrage);
+        }
+
+        // Le voyant continue de clignoter en orange indéfiniment — l'imprimante reste en panne
     }
 
     IEnumerator AnimationImpression()

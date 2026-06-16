@@ -2,18 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class BureauManager : MonoBehaviour
 {
     [Header("Avatar")]
-    [Tooltip("L'avatar sur lequel appuyer B pour démarrer la salle — contient l'AudioSource du dialogue")]
+    [Tooltip("L'avatar sur lequel appuyer la gâchette pour démarrer la salle — contient l'AudioSource du dialogue")]
     public XRSimpleInteractable avatar;
+    [Tooltip("Optionnel — Timeline à lancer au démarrage de la salle (ex: animation de l'avatar)")]
+    public PlayableDirector timeline;
 
     [Header("Imprimante")]
-    [Tooltip("Optionnel — se lance automatiquement en fin de dialogue (Bureau 02 uniquement)")]
+    [Tooltip("Optionnel — se lance automatiquement en fin de dialogue")]
     public PrinterAnimation imprimante;
+    [Tooltip("Délai après le début du dialogue avant de lancer l'impression, en secondes")]
+    public float delaiAvantImpression = 0f;
+    [Tooltip("Si coché, simule un bourrage papier (son différent, la feuille ne sort jamais) au lieu d'imprimer normalement")]
+    public bool bourragePapier = false;
 
     [Header("Porte")]
     [Tooltip("La porte de cette salle")]
@@ -21,9 +28,11 @@ public class BureauManager : MonoBehaviour
     [Tooltip("La porte de la salle suivante à déverrouiller une fois cette salle validée")]
     public DoorInteractable porteSuivante;
 
-    [Header("Effet couloir (Bureau 01 uniquement)")]
-    [Tooltip("Optionnel — déclenche la disparition progressive des objets du couloir dès l'interaction avec l'avatar")]
+    [Header("Effet couloir (salle B02 uniquement)")]
+    [Tooltip("Optionnel — déclenche la disparition des objets dès l'interaction avec l'avatar, puis le battement de cœur après le délai ci-dessous (la respiration et l'intensité max se déclenchent ensuite dans le couloir)")]
     public HallwayPanicEffect effetCouloir;
+    [Tooltip("Délai après le début du dialogue avant de déclencher le battement de cœur, en secondes")]
+    public float delaiAvantBattementCoeur = 0f;
 
     [Header("Dialogues")]
     [Tooltip("Canvas WorldSpace positionné statiquement devant le joueur")]
@@ -47,10 +56,12 @@ public class BureauManager : MonoBehaviour
     private CanvasGroup groupeDialogue;
     private AudioSource sourceAudioDialogue;
     private InputDevice manetteDroite;
-    private bool boutonBPrecedent;
+    private bool gachettePrecedente;
     private bool survolAvatarActif;
     private bool salleDemarree;
     private bool salleValidee;
+    private bool dialogueTermine;
+    private bool feuilleRecuperee;
 
     void Awake()
     {
@@ -88,12 +99,13 @@ public class BureauManager : MonoBehaviour
                 manetteDroite = dispositifs[0];
         }
 
-        bool boutonBActuel = false;
+        float valeurGachette = 0f;
         if (manetteDroite.isValid)
-            manetteDroite.TryGetFeatureValue(CommonUsages.secondaryButton, out boutonBActuel);
+            manetteDroite.TryGetFeatureValue(CommonUsages.trigger, out valeurGachette);
+        bool gachetteActuelle = valeurGachette > 0.5f;
 
-        bool vientDEtreAppuye = boutonBActuel && !boutonBPrecedent;
-        boutonBPrecedent = boutonBActuel;
+        bool vientDEtreAppuye = gachetteActuelle && !gachettePrecedente;
+        gachettePrecedente = gachetteActuelle;
 
         if (survolAvatarActif && vientDEtreAppuye)
             DemarrerSalle();
@@ -115,18 +127,52 @@ public class BureauManager : MonoBehaviour
         if (effetCouloir != null)
             effetCouloir.DemarrerDisparitionObjets();
 
+        if (timeline != null)
+            timeline.Play();
+
         StartCoroutine(JouerDialogues());
+
+        if (imprimante != null)
+            StartCoroutine(LancerImpressionDifferee());
+
+        if (effetCouloir != null)
+            StartCoroutine(LancerBattementCoeurDiffere());
+    }
+
+    IEnumerator LancerImpressionDifferee()
+    {
+        yield return new WaitForSeconds(delaiAvantImpression);
+
+        if (bourragePapier)
+            imprimante.ImprimerAvecBourrage();
+        else
+            imprimante.Imprimer();
+    }
+
+    IEnumerator LancerBattementCoeurDiffere()
+    {
+        yield return new WaitForSeconds(delaiAvantBattementCoeur);
+        effetCouloir.DemarrerBattementCoeur();
     }
 
     public void SignalerMissionTerminee()
     {
-        ValiderSalle();
+        feuilleRecuperee = true;
+        TenterValidation();
     }
 
     [ContextMenu("TEST — Valider la salle")]
     void DebugValiderSalle()
     {
         ValiderSalle();
+    }
+
+    void TenterValidation()
+    {
+        // Pas de feuille à récupérer ? La condition "feuille" est auto-remplie
+        bool feuilleOK = feuilleRecuperee || imprimante == null || bourragePapier;
+        if (dialogueTermine && feuilleOK)
+            ValiderSalle();
     }
 
     void ValiderSalle()
@@ -167,25 +213,35 @@ public class BureauManager : MonoBehaviour
 
         if (dialogues != null && dialogues.Length > 0)
         {
-            foreach (var ligne in dialogues)
+            for (int i = 0; i < dialogues.Length; i++)
             {
                 if (texteDialogue != null)
-                    texteDialogue.text = ligne.texte;
+                    texteDialogue.text = dialogues[i].texte;
 
-                yield return new WaitForSeconds(ligne.duree);
+                yield return new WaitForSeconds(dialogues[i].duree);
             }
+
+            if (texteDialogue != null)
+                texteDialogue.text = "";
         }
         else if (sourceAudioDialogue != null && sourceAudioDialogue.clip != null)
         {
             yield return new WaitForSeconds(sourceAudioDialogue.clip.length);
         }
 
-        if (texteDialogue != null)
-            texteDialogue.text = "";
+        // Sécurité : ne jamais continuer tant que le son du dialogue joue encore réellement
+        while (sourceAudioDialogue != null && sourceAudioDialogue.isPlaying)
+            yield return null;
+
+        // Sécurité : attendre aussi la fin de la Timeline (l'audio peut être intégré dedans)
+        // Note : en mode Hold, state reste Playing après la fin → on vérifie aussi le temps
+        while (timeline != null && timeline.state == PlayState.Playing
+               && timeline.time + 0.05f < timeline.duration)
+            yield return null;
 
         yield return StartCoroutine(FadeDialogue(0f));
 
-        if (imprimante != null)
-            imprimante.Imprimer();
+        dialogueTermine = true;
+        TenterValidation();
     }
 }
