@@ -14,6 +14,11 @@ public class DoorInteractable : MonoBehaviour
     [Tooltip("Durée de l'animation d'ouverture/fermeture en secondes")]
     public float dureeAnimation = 0.8f;
 
+    // Invoqué à chaque animation de porte : (vaOuvrir, dureeAnimation)
+    public event System.Action<bool, float> Animee;
+
+    public bool EstOuverte => porteOuverte;
+
     private XRSimpleInteractable interactable;
     private InputDevice manetteDroite;
     private bool boutonBPrecedent;
@@ -80,7 +85,16 @@ public class DoorInteractable : MonoBehaviour
         Quaternion rotDepart = transform.localRotation;
         float sens = (porteOuverte ? -angleOuverture : angleOuverture) * facteurSens;
         Quaternion rotCible = Quaternion.Euler(transform.localEulerAngles + new Vector3(0f, sens, 0f));
+        bool vaOuvrir = !porteOuverte;
         porteOuverte = !porteOuverte;
+
+        if (AmbianceCouloir.Instance != null)
+        {
+            if (vaOuvrir) AmbianceCouloir.Instance.Retablir(dureeAnimation);
+            else AmbianceCouloir.Instance.Etouffer(dureeAnimation);
+        }
+
+        Animee?.Invoke(vaOuvrir, dureeAnimation);
 
         float t = 0f;
         while (t < dureeAnimation)

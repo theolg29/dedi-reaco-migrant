@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider), typeof(AudioSource))]
-public class HallwayAudioSequence : MonoBehaviour
+public class SeatsDiscussion : MonoBehaviour
 {
     [Header("Sons du couloir")]
     [Tooltip("Clips joués dans l'ordre à chaque passage")]

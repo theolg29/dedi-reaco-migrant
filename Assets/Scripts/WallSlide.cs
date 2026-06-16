@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
-public class HallwayManager : MonoBehaviour
+public class WallSlide : MonoBehaviour
 {
     [Header("Références")]
     [Tooltip("XR Origin du joueur")]

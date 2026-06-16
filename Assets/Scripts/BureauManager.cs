@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 public class BureauManager : MonoBehaviour
 {
     [Header("Avatar")]
-    [Tooltip("L'avatar (ou cube) sur lequel appuyer B pour démarrer la salle")]
+    [Tooltip("L'avatar sur lequel appuyer B pour démarrer la salle — contient l'AudioSource du dialogue")]
     public XRSimpleInteractable avatar;
 
     [Header("Imprimante")]
@@ -21,6 +21,10 @@ public class BureauManager : MonoBehaviour
     [Tooltip("La porte de la salle suivante à déverrouiller une fois cette salle validée")]
     public DoorInteractable porteSuivante;
 
+    [Header("Effet couloir (Bureau 01 uniquement)")]
+    [Tooltip("Optionnel — déclenche la disparition progressive des objets du couloir dès l'interaction avec l'avatar")]
+    public HallwayPanicEffect effetCouloir;
+
     [Header("Dialogues")]
     [Tooltip("Canvas WorldSpace positionné statiquement devant le joueur")]
     public GameObject panneauDialogue;
@@ -28,10 +32,6 @@ public class BureauManager : MonoBehaviour
     public float dureeTransition = 0.4f;
     [Tooltip("Texte du panneau de dialogue")]
     public TextMeshProUGUI texteDialogue;
-    [Tooltip("Son global joué au début de la séquence de dialogues")]
-    public AudioClip sonDialogue;
-    [Tooltip("AudioSource positionnelle sur l'avatar — si vide, utilise celle du GameObject")]
-    public AudioSource sourceAudioDialogue;
 
     [System.Serializable]
     public struct LigneDialogue
@@ -45,6 +45,7 @@ public class BureauManager : MonoBehaviour
     public LigneDialogue[] dialogues;
 
     private CanvasGroup groupeDialogue;
+    private AudioSource sourceAudioDialogue;
     private InputDevice manetteDroite;
     private bool boutonBPrecedent;
     private bool survolAvatarActif;
@@ -53,11 +54,8 @@ public class BureauManager : MonoBehaviour
 
     void Awake()
     {
-        if (sourceAudioDialogue == null)
-        {
-            if (!TryGetComponent(out sourceAudioDialogue))
-                sourceAudioDialogue = gameObject.AddComponent<AudioSource>();
-        }
+        if (avatar != null)
+            sourceAudioDialogue = avatar.GetComponent<AudioSource>();
 
         if (panneauDialogue != null)
         {
@@ -114,6 +112,9 @@ public class BureauManager : MonoBehaviour
             porte.Verrouiller();
         }
 
+        if (effetCouloir != null)
+            effetCouloir.DemarrerDisparitionObjets();
+
         StartCoroutine(JouerDialogues());
     }
 
@@ -161,11 +162,8 @@ public class BureauManager : MonoBehaviour
     {
         yield return StartCoroutine(FadeDialogue(1f));
 
-        if (sonDialogue != null)
-        {
-            sourceAudioDialogue.clip = sonDialogue;
+        if (sourceAudioDialogue != null)
             sourceAudioDialogue.Play();
-        }
 
         if (dialogues != null && dialogues.Length > 0)
         {
