@@ -282,7 +282,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4052501102677056523}
   m_Layer: 0
-  m_Name: Couloir_Affiches_liege
+  m_Name: P_Couloir Affiches+ liege
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

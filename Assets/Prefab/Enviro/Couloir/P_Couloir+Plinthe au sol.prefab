@@ -820,7 +820,7 @@ GameObject:
   m_Component:
   - component: {fileID: 871080373463174407}
   m_Layer: 0
-  m_Name: 'Couloir_Plinthe au sol '
+  m_Name: P_Couloir+Plinthe au sol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
