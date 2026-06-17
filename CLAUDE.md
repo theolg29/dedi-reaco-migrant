@@ -1,70 +1,31 @@
-# DEDI ReaCo — Projet VR Préfecture
+# dedi-reaco-migrant
 
-## Contexte du projet
+Projet Unity VR (XR Interaction Toolkit). Expérience narrative immersive.
 
-Projet de Master DEDI. Objectif : créer une expérience immersive à destination des fonctionnaires en préfecture travaillant avec des personnes étrangères dans le cadre de l'obtention de papiers.
+## Conventions
 
-Le concept global est une expérience **AR** (documentée dans le dossier de production). La partie développée en Unity est un **segment VR** concentré sur une portion spécifique de la courbe émotionnelle.
+- **Noms de variables, méthodes et champs** : en français (ex: `joueur`, `couloirSortie`, `actif`)
+- **Noms de fichiers et classes C#** : en anglais (ex: `WallSlide.cs`)
+- **Headers et Tooltips Inspector** : en français
+- **Préférer un seul script/GameObject** plutôt que plusieurs quand c'est possible — plus clair, plus propre
 
-## Courbe émotionnelle (gauche → droite)
+## Structure des salles
 
-```
-ESPOIR → PRÉOCCUPÉ → AGACEMENT → CONTRÔLE → INCROMPRHÉNSION → FRUSTRÉ/SURCHARGÉ/STRESS → DÉSESPOIR → SOULAGEMENT/APAISÉ
-```
+Vue du dessus : AO3 | B02 | AB42 (au fond)
+Ordre de jeu : on commence par AO3, puis B02, puis on termine par AB42.
 
-**Le segment VR couvre : CONTRÔLE → DÉSESPOIR** (avant la chute de la courbe).
+Anciens noms (pour référence) : AO3 = ex-Bureau 01, B02 = ex-Bureau 02, AB42 = ex-Bureau 03.
 
-## Scénario VR
+L'effet de panique progressif (battement de cœur → respiration/vignette → intensité max) se déclenche après la salle **B02**, dans le couloir vers AB42 — voir `DOCS/panique-effect.md`.
 
-1. **Bureau général** : un avatar accueille le joueur et l'oriente vers un bureau situé dans un couloir
-2. **Bureau 1** : la fonctionnaire a tous les papiers requis → redirige vers le Bureau 2
-3. **Bureau 2** : problèmes, documents manquants ou refus → redirige vers un autre bureau
-4. **Couloir de l'espoir brisé** : le couloir s'allonge visuellement à mesure que le joueur avance (effet de désespoir)
-5. **Sortie** : le couloir finit par s'arrêter, le joueur peut prendre la sortie → fin de la démo VR
+## Documentation des scripts
 
-La suite de l'expérience (soulagement, apaisement) est documentée dans les livrables de rendu, pas développée en Unity.
+Le dossier `DOCS/` contient une documentation détaillée de tous les scripts C# du projet, par système :
 
-## Stack technique
+- [`DOCS/README.md`](./DOCS/README.md) — index général, vue d'ensemble de tous les scripts
+- [`DOCS/bureau-et-salles.md`](./DOCS/bureau-et-salles.md) — `BureauManager`, `PrinterAnimation`, `FeuilleRecuperable`
+- [`DOCS/panique-effect.md`](./DOCS/panique-effect.md) — `HallwayPanicEffect`, `WallSlide`
+- [`DOCS/portes-et-sons-ambiants.md`](./DOCS/portes-et-sons-ambiants.md) — `DoorInteractable`, `DoorMuffledVolume`, `SeatsDiscussion`, `FanRotator`
+- [`DOCS/divers.md`](./DOCS/divers.md) — surbrillance, fondu d'écran, intro, locomotion dev
 
-- **Moteur** : Unity (URP) — template VR Unity de base
-- **Casque cible** : Meta Quest 2
-- **SDK** : OpenXR + XR Interaction Toolkit (template XR téléchargé pour les mécaniques prêtes à l'emploi : portes, interactables, etc.)
-- **Locomotion VR** : déplacement au joystick de la manette (continuous move)
-- **Locomotion AR** (concept, non développé) : déplacement physique dans une grande pièce (roomscale)
-
-## Structure du projet
-
-### Scènes Unity
-| Scène | Usage |
-|---|---|
-| `LaSceneDeGame.unity` | **Scène principale partagée** — contient le jeu final, à merger avec précaution |
-| `Hassan.unity` | Scène de dev perso — Hassan |
-| `Mathilde.unity` | Scène de dev perso — Mathilde |
-| `Ronan.unity` | Scène de dev perso — Ronan |
-| `Theo.unity` | Scène de dev perso — Theo |
-
-Chaque développeur travaille dans **sa propre scène** pour éviter les conflits de merge.
-
-## Workflow Git
-
-### Branches
-| Branche | Propriétaire |
-|---|---|
-| `main` | Branche d'intégration (merge ici quand stable) |
-| `hassan` | Hassan |
-| `mathilde` | Mathilde |
-| `ronan` | Ronan |
-| `theo` | Theo |
-
-### Règles
-- Chaque dev travaille sur **sa branche personnelle**, merge sur `main` quand la feature est stable
-- **À chaque nouvelle instance Claude** : demander sur quelle branche on travaille, attendre la réponse, puis faire `git checkout <branche>` avant tout développement
-- **Après chaque feature développée avec succès** : proposer dans le chat de faire un commit avec un message clair
-
-### Commit workflow
-Après une feature réussie, proposer :
-```
-git add <fichiers concernés>
-git commit -m "feat: <description courte>"
-```
-Ne jamais faire `git add -A` ou `git add .` sans vérifier les fichiers concernés.
+À consulter avant de modifier un script existant, et à mettre à jour après tout changement de comportement ou de câblage entre scripts.
