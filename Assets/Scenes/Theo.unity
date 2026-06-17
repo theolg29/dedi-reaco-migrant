@@ -3152,7 +3152,7 @@ MonoBehaviour:
   porte: {fileID: 1170719656}
   porteSuivante: {fileID: 0}
   effetCouloir: {fileID: 1032960455}
-  delaiAvantBattementCoeur: 66
+  delaiAvantBattementCoeur: 72
   panneauDialogue: {fileID: 381996442}
   dureeTransition: 0.4
   texteDialogue: {fileID: 1658330599}
@@ -4620,7 +4620,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1008214563
 Transform:
   m_ObjectHideFlags: 0
@@ -4794,14 +4794,19 @@ MonoBehaviour:
   volumeBattementDepart: 0.2
   volumeBattementMilieu: 0.35
   vitesseMonteeBattement: 0.5
+  pitchBattementDepart: 1
   volumeRespirationMilieu: 0.4
   opaciteVignetteMilieu: 0.25
   vitesseMonteeRespiration: 0.4
+  pitchBattementPhase2: 1.25
+  intensiteVibrationPhase2: 0.15
   vitesseMonteeIntense: 0.3
+  pitchBattementMax: 1.6
   cibleShake: {fileID: 267882151}
   intensiteShake: 0.03
   dureeShake: 0.12
   intensiteVibration: 0.5
+  intensiteVibrationPhase1: 0.05
   dureeVibration: 0.1
   opaciteVignetteMax: 0.85
   amplitudeFlickerVignette: 0.1
@@ -7082,7 +7087,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1688659138
 Transform:
   m_ObjectHideFlags: 0
@@ -9095,12 +9100,12 @@ SceneRoots:
   - {fileID: 715854754}
   - {fileID: 1759975308}
   - {fileID: 1851199265}
-  - {fileID: 633147389}
   - {fileID: 152617956}
+  - {fileID: 633147389}
   - {fileID: 2015587187}
-  - {fileID: 821370739}
   - {fileID: 1475944611}
   - {fileID: 1772966536}
+  - {fileID: 821370739}
   - {fileID: 2002462925}
   - {fileID: 1920431838}
   - {fileID: 1177031636}

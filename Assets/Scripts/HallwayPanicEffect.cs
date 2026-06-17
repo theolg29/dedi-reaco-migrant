@@ -18,7 +18,7 @@ public class HallwayPanicEffect : MonoBehaviour
     public AudioClip sonBattementCoeur;
     [Tooltip("Son de respiration, joué en boucle pendant toute la séquence")]
     public AudioClip sonRespiration;
-    [Tooltip("Intervalle entre deux impulsions de vibration/shake en Phase 3, en secondes — n'affecte pas le son du battement")]
+    [Tooltip("Intervalle de base entre deux impulsions de vibration/shake (en secondes), dès la Phase 1 — se resserre automatiquement avec l'accélération du cœur (pitch)")]
     public float intervalleBattement = 0.9f;
 
     [Header("Phase 1 — Battement de cœur (fin du dialogue)")]
@@ -28,6 +28,8 @@ public class HallwayPanicEffect : MonoBehaviour
     public float volumeBattementMilieu = 0.35f;
     [Tooltip("Vitesse de montée du volume du battement — plus c'est haut, plus la transition est rapide")]
     public float vitesseMonteeBattement = 0.5f;
+    [Tooltip("Vitesse de lecture (pitch) du cœur en phase 1 — 1 = rythme normal du clip")]
+    public float pitchBattementDepart = 1f;
 
     [Header("Phase 2 — Respiration + vignette (sortie de la salle)")]
     [Tooltip("Volume de la respiration visé en phase 2 (avant l'intensité max)")]
@@ -36,10 +38,16 @@ public class HallwayPanicEffect : MonoBehaviour
     public float opaciteVignetteMilieu = 0.25f;
     [Tooltip("Vitesse de montée de la respiration et de la vignette")]
     public float vitesseMonteeRespiration = 0.4f;
+    [Tooltip("Vitesse de lecture (pitch) du cœur en phase 2 — le cœur bat plus vite")]
+    public float pitchBattementPhase2 = 1.25f;
+    [Tooltip("Intensité de la vibration en phase 2, avant le maximum")]
+    public float intensiteVibrationPhase2 = 0.15f;
 
     [Header("Phase 3 — Intensité max (couloir s'allonge)")]
     [Tooltip("Vitesse à laquelle tous les effets montent vers leur maximum")]
     public float vitesseMonteeIntense = 0.3f;
+    [Tooltip("Vitesse de lecture (pitch) du cœur en phase 3 — le cœur bat très rapidement")]
+    public float pitchBattementMax = 1.6f;
 
     [Header("Shake caméra")]
     [Tooltip("Objet à secouer à chaque battement — assigner le \"Camera Offset\" du XR Origin, jamais la caméra elle-même (écrasée par le tracking)")]
@@ -52,6 +60,8 @@ public class HallwayPanicEffect : MonoBehaviour
     [Header("Vibration manettes")]
     [Tooltip("Intensité max de la vibration (0-1), atteinte en phase 3")]
     public float intensiteVibration = 0.5f;
+    [Tooltip("Intensité très légère de la vibration dès la Phase 1, synchronisée sur le battement de cœur")]
+    public float intensiteVibrationPhase1 = 0.05f;
     [Tooltip("Durée de la vibration à chaque battement")]
     public float dureeVibration = 0.1f;
 
@@ -65,6 +75,7 @@ public class HallwayPanicEffect : MonoBehaviour
 
     private int phase;
     private float volumeBattementActuel;
+    private float pitchBattementActuel;
     private float opaciteVignetteBase;
     private float intensiteShakeActuelle;
     private float intensiteVibrationActuelle;
@@ -108,6 +119,7 @@ public class HallwayPanicEffect : MonoBehaviour
 
         PreparerDisparitionObjets();
         volumeBattementActuel = volumeBattementDepart;
+        pitchBattementActuel = pitchBattementDepart;
     }
 
     void CreerVignette()
@@ -171,6 +183,7 @@ public class HallwayPanicEffect : MonoBehaviour
         {
             sourceBattement.clip = sonBattementCoeur;
             sourceBattement.volume = volumeBattementActuel;
+            sourceBattement.pitch = pitchBattementActuel;
             sourceBattement.Play();
         }
 
@@ -228,11 +241,17 @@ public class HallwayPanicEffect : MonoBehaviour
 
         if (phase < 1) return;
 
-        // ── Phase 1+ : battement de cœur monte progressivement ──
+        // ── Phase 1+ : battement de cœur monte progressivement, de plus en plus vite à chaque phase ──
         float cibleBattement = phase >= 3 ? 1f : volumeBattementMilieu;
-        float vitBattement = phase >= 3 ? vitesseMonteeIntense : vitesseMonteeBattement;
+        float ciblePitch = phase >= 3 ? pitchBattementMax : (phase >= 2 ? pitchBattementPhase2 : pitchBattementDepart);
+        float cibleVibration = phase >= 3 ? intensiteVibration : (phase >= 2 ? intensiteVibrationPhase2 : intensiteVibrationPhase1);
+        float vitBattement = phase >= 3 ? vitesseMonteeIntense : (phase >= 2 ? vitesseMonteeRespiration : vitesseMonteeBattement);
+
         volumeBattementActuel = Mathf.Lerp(volumeBattementActuel, cibleBattement, Time.deltaTime * vitBattement);
+        pitchBattementActuel = Mathf.Lerp(pitchBattementActuel, ciblePitch, Time.deltaTime * vitBattement);
+        intensiteVibrationActuelle = Mathf.Lerp(intensiteVibrationActuelle, cibleVibration, Time.deltaTime * vitBattement);
         sourceBattement.volume = volumeBattementActuel;
+        sourceBattement.pitch = pitchBattementActuel;
 
         // ── Phase 2+ : respiration + vignette ──
         if (phase >= 2)
@@ -254,12 +273,9 @@ public class HallwayPanicEffect : MonoBehaviour
             vignette.color = c;
         }
 
-        // ── Phase 3 : shake + vibrations montent vers le max ──
+        // ── Phase 3 : le shake caméra monte vers le max (réservé à l'intensité maximale) ──
         if (phase >= 3)
-        {
             intensiteShakeActuelle = Mathf.Lerp(intensiteShakeActuelle, intensiteShake, Time.deltaTime * vitesseMonteeIntense);
-            intensiteVibrationActuelle = Mathf.Lerp(intensiteVibrationActuelle, intensiteVibration, Time.deltaTime * vitesseMonteeIntense);
-        }
     }
 
     void ObtenirManettes()
@@ -279,19 +295,18 @@ public class HallwayPanicEffect : MonoBehaviour
     {
         while (phase >= 1)
         {
-            // Vibrations et shake uniquement en phase 3 — indépendant du son du battement, qui boucle naturellement
-            if (phase >= 3)
-            {
-                if (manetteDroite.isValid)
-                    manetteDroite.SendHapticImpulse(0, intensiteVibrationActuelle, dureeVibration);
-                if (manetteGauche.isValid)
-                    manetteGauche.SendHapticImpulse(0, intensiteVibrationActuelle, dureeVibration);
+            // Dès la phase 1, vibration légère synchronisée sur le battement, qui monte de phase en phase.
+            // Le shake caméra reste réservé à la phase 3 (intensité max).
+            if (manetteDroite.isValid)
+                manetteDroite.SendHapticImpulse(0, intensiteVibrationActuelle, dureeVibration);
+            if (manetteGauche.isValid)
+                manetteGauche.SendHapticImpulse(0, intensiteVibrationActuelle, dureeVibration);
 
-                if (cibleShake != null)
-                    StartCoroutine(Secouer(intensiteShakeActuelle));
-            }
+            if (phase >= 3 && cibleShake != null)
+                StartCoroutine(Secouer(intensiteShakeActuelle));
 
-            yield return new WaitForSeconds(intervalleBattement);
+            // Le cœur qui s'accélère (pitch) rapproche aussi les impulsions de vibration
+            yield return new WaitForSeconds(intervalleBattement / Mathf.Max(0.01f, pitchBattementActuel));
         }
     }
 
