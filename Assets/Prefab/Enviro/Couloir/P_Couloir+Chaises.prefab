@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2186198419026137397}
   m_Layer: 0
-  m_Name: Couloir_Chaises
+  m_Name: P_Couloir+Chaises
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
