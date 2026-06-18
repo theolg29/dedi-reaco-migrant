@@ -23,7 +23,7 @@ L'effet de panique progressif (battement de cœur → respiration/vignette → i
 Le dossier `DOCS/` contient une documentation détaillée de tous les scripts C# du projet, par système :
 
 - [`DOCS/README.md`](./DOCS/README.md) — index général, vue d'ensemble de tous les scripts
-- [`DOCS/bureau-et-salles.md`](./DOCS/bureau-et-salles.md) — `BureauManager`, `PrinterAnimation`, `FeuilleRecuperable`
+- [`DOCS/bureau-et-salles.md`](./DOCS/bureau-et-salles.md) — `BureauManager`, `PrinterAnimation`
 - [`DOCS/panique-effect.md`](./DOCS/panique-effect.md) — `HallwayPanicEffect`, `WallSlide`
 - [`DOCS/portes-et-sons-ambiants.md`](./DOCS/portes-et-sons-ambiants.md) — `DoorInteractable`, `DoorMuffledVolume`, `SeatsDiscussion`, `FanRotator`
 - [`DOCS/divers.md`](./DOCS/divers.md) — surbrillance, fondu d'écran, intro, locomotion dev

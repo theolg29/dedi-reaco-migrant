@@ -28,6 +28,10 @@ public class BureauManager : MonoBehaviour
     [Tooltip("La porte de la salle suivante à déverrouiller une fois cette salle validée")]
     public DoorInteractable porteSuivante;
 
+    [Header("Changement d'éclairage (optionnel)")]
+    [Tooltip("Optionnel — bascule entre deux GameObjects (ex: deux setups d'éclairage) à la fin du dialogue")]
+    public GameObjectSwapper changementLumiere;
+
     [Header("Effet couloir (salle B02 uniquement)")]
     [Tooltip("Optionnel — déclenche la disparition des objets dès l'interaction avec l'avatar, puis le battement de cœur après le délai ci-dessous (la respiration et l'intensité max se déclenchent ensuite dans le couloir)")]
     public HallwayPanicEffect effetCouloir;
@@ -61,7 +65,6 @@ public class BureauManager : MonoBehaviour
     private bool salleDemarree;
     private bool salleValidee;
     private bool dialogueTermine;
-    private bool feuilleRecuperee;
 
     void Awake()
     {
@@ -155,12 +158,6 @@ public class BureauManager : MonoBehaviour
         effetCouloir.DemarrerBattementCoeur();
     }
 
-    public void SignalerMissionTerminee()
-    {
-        feuilleRecuperee = true;
-        TenterValidation();
-    }
-
     [ContextMenu("TEST — Valider la salle")]
     void DebugValiderSalle()
     {
@@ -169,9 +166,7 @@ public class BureauManager : MonoBehaviour
 
     void TenterValidation()
     {
-        // Pas de feuille à récupérer ? La condition "feuille" est auto-remplie
-        bool feuilleOK = feuilleRecuperee || imprimante == null || bourragePapier;
-        if (dialogueTermine && feuilleOK)
+        if (dialogueTermine)
             ValiderSalle();
     }
 
@@ -240,6 +235,9 @@ public class BureauManager : MonoBehaviour
             yield return null;
 
         yield return StartCoroutine(FadeDialogue(0f));
+
+        if (changementLumiere != null)
+            changementLumiere.Basculer();
 
         dialogueTermine = true;
         TenterValidation();

@@ -23,10 +23,6 @@ public class PrinterAnimation : MonoBehaviour
     [Header("Voyant LED")]
     public float vitesseClignotement = 1f;
 
-    [Header("Feuille")]
-    [Tooltip("Script sur la feuille imprimée pour activer la récupération")]
-    public FeuilleRecuperable feuilleRecuperable;
-
     [Header("Audio")]
     public AudioClip sonImpression;
 
@@ -134,12 +130,9 @@ public class PrinterAnimation : MonoBehaviour
         else
             yield return new WaitForSeconds(T_FIN - T_DEBUT_GROS_ACOUP);
 
-        // Phase 6 — fin : LED s'éteint fixe, feuille récupérable
+        // Phase 6 — fin : LED s'éteint fixe
         clignotementActif = false;
         if (voyantLED != null) voyantLED.enabled = true;
-
-        if (feuilleRecuperable != null)
-            feuilleRecuperable.ActiverRecuperation();
     }
 
     IEnumerator DeplacerVers(Transform feuille, Vector3 destination, float duree)
