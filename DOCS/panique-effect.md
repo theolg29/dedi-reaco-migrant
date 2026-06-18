@@ -10,9 +10,9 @@ L'effet de panique simule une crise d'angoisse progressive quand le joueur trave
 
 | Phase | Déclencheur | Ce qui se passe |
 |-------|-------------|-----------------|
-| **1 — Battement de cœur** | `BureauManager` (salle B02), après `delaiAvantBattementCoeur` secondes depuis le début de l'interaction avatar | Un battement court ("lub-dub") est rejoué à intervalle régulier (rythme calme), le volume monte progressivement ; une très légère vibration manette accompagne **chaque** battement, exactement en même temps que le son |
-| **2 — Respiration + vignette** | Le joueur entre dans le couloir (BoxCollider trigger) | Un son de respiration apparaît, un voile noir commence à assombrir la vision ; le cœur **bat plus souvent** (intervalle plus court) et la vibration s'intensifie un peu |
-| **3 — Intensité max** | Le couloir commence à s'allonger (WallSlide) | Le cœur bat **très vite** (intervalle minimal), shake caméra, vibrations manettes au maximum, tout monte au maximum |
+| **1 — Battement de cœur** | `BureauManager` (salle B02), après `delaiAvantBattementCoeur` secondes depuis le début de l'interaction avatar | Une ambiance longue de battement de cœur démarre en boucle continue, le volume monte progressivement ; une très légère vibration manette + (en phase 3) un shake caméra suivent leur propre rythme, accéléré phase après phase, indépendamment du son |
+| **2 — Respiration + vignette** | Le joueur entre dans le couloir (BoxCollider trigger) | Un son de respiration apparaît, un voile noir commence à assombrir la vision ; le rythme de la vibration **s'accélère** (intervalle plus court) et son intensité augmente un peu |
+| **3 — Intensité max** | Le couloir commence à s'allonger (WallSlide) | Le rythme de la vibration et du shake devient **très rapide** (intervalle minimal), tout monte au maximum (volume du cœur et de la respiration, vignette, vibrations, shake) |
 
 > Le déclenchement de la Phase 1 par **délai** (et non par "dernière ligne de dialogue") est volontaire : avec un dialogue à une seule ligne, "la dernière ligne" est aussi la première, ce qui ferait partir le battement dès le début. Le délai, réglé à la main sur `BureauManager`, permet de viser précisément "vers la fin" peu importe le nombre de lignes.
 
@@ -50,13 +50,13 @@ Scène
 | Champ | Quoi assigner | Rôle |
 |-------|---------------|------|
 | `Objets A Disparaitre` | Liste de GameObjects (meubles, PNJ, décorations) | Objets qui disparaissent un par un pendant le dialogue |
-| `Son Battement Coeur` | AudioClip **court** contenant un battement complet "lub-dub" (deux pulsations, ex: ~0.4-0.6s) | Rejoué via `PlayOneShot` à chaque battement — ⚠️ pas une ambiance longue, voir piège ci-dessous |
+| `Son Battement Coeur` | AudioClip **long** (~10-15s), ambiance de battement de cœur | Joué une seule fois en boucle (`loop = true`) dès `DemarrerBattementCoeur()`, jamais redémarré — seul son volume monte selon la phase, son rythme propre reste fixe |
 | `Son Respiration` | AudioClip de respiration en boucle | Joué en continu à partir de la phase 2 |
 | `Cible Shake` | Le **Camera Offset** du XR Origin | Objet secoué pour simuler le tremblement (⚠️ jamais la caméra directement) |
-| `Intervalle Battement Depart` / `Phase2` / `Max` | Des durées en secondes entre deux battements | Rythme du cœur par phase (ex: 1s ≈ 60 bpm → 0.6s ≈ 100 bpm → 0.35s ≈ 170 bpm) — pilote **à la fois** le déclenchement du son et la vibration manette, donc les deux sont toujours parfaitement synchronisés |
+| `Intervalle Battement Depart` / `Phase2` / `Max` | Des durées en secondes entre deux impulsions | Rythme de la **vibration manette** (et du shake en phase 3) par phase (ex: 1s → 0.6s → 0.35s) — n'affecte plus le son du cœur, qui tourne en boucle indépendamment |
 | `Intensite Vibration Phase1` / `Intensite Vibration Phase2` / `Intensite Vibration` | Des intensités (0-1) | Intensité de la vibration manette par phase — légère en Phase 1, modérée en Phase 2, maximale en Phase 3 |
 
-⚠️ **Piège évité (mis à jour)** : un cœur qui s'accélère ne change pas de hauteur (pitch), il bat juste plus **souvent** — la vitesse vient donc de l'intervalle entre les battements, pas d'un pitch qu'on augmente. Et puisque le clip du battement est **court** (durée ≤ intervalle le plus serré), le rejouer via `PlayOneShot` à chaque battement ne tronque jamais le son (contrairement à redémarrer un clip **long** à intervalle court, qui ne ferait entendre que son attaque en boucle serrée).
+⚠️ **Piège évité** : ne jamais redémarrer (`PlayOneShot` ou `Play`) un clip **long** à intervalle court — ça ne fait entendre que son attaque en boucle serrée. Le son du cœur est donc joué **une seule fois** en boucle native (`AudioSource.loop = true`), pendant que la vibration manette et le shake caméra suivent leur propre rythme via une coroutine séparée (`BoucleBattement`), totalement indépendante de la lecture audio.
 
 #### Sur le WallSlide
 
@@ -81,11 +81,11 @@ Dès que le joueur interagit avec l'avatar dans B02 :
 **Quand :** `delaiAvantBattementCoeur` secondes après le début de l'interaction avec l'avatar (réglé indépendamment du dialogue lui-même).
 
 **Ce qui se passe :**
-- Le battement court (`Son Battement Coeur`) commence à être rejoué à intervalle régulier, en partant de `Intervalle Battement Depart` (ex: 1s ≈ 60 bpm, rythme calme)
+- L'ambiance longue (`Son Battement Coeur`) démarre en boucle continue, une seule fois
 - Le volume part de `Volume Battement Depart` (très bas, ex: 0.1)
 - Il monte progressivement vers `Volume Battement Milieu` (ex: 0.35)
-- Une vibration manette très légère (`Intensite Vibration Phase1`, ex: 0.05) accompagne **chaque** battement, exactement en même temps que le son
-- La vitesse de montée (volume + intervalle) est contrôlée par `Vitesse Montee Battement`
+- Une vibration manette très légère (`Intensite Vibration Phase1`, ex: 0.05) pulse à intervalle régulier, en partant de `Intervalle Battement Depart` (ex: 1s ≈ 60 bpm, rythme calme) — indépendamment du son, qui continue de tourner en boucle à son propre rythme
+- La vitesse de montée (volume + intervalle de vibration) est contrôlée par `Vitesse Montee Battement`
 
 **Ressenti joueur :** Un léger malaise, quelque chose ne va pas.
 
@@ -97,8 +97,8 @@ Dès que le joueur interagit avec l'avatar dans B02 :
 - Le son de respiration démarre (volume à 0, monte vers `Volume Respiration Milieu`)
 - Un voile noir apparaît progressivement sur les bords de la vision (vignette)
 - L'opacité monte vers `Opacite Vignette Milieu`
-- Le battement de cœur continue sa progression et **accélère** (l'intervalle se resserre vers `Intervalle Battement Phase2`, ex: 0.6s ≈ 100 bpm) — le cœur bat plus souvent
-- La vibration manette s'intensifie un peu (`Intensite Vibration Phase2`, ex: 0.15) et ses impulsions se rapprochent en même temps que le son (même intervalle)
+- Le volume du cœur continue sa progression vers `Volume Battement Milieu`
+- La vibration manette s'intensifie un peu (`Intensite Vibration Phase2`, ex: 0.15) et son rythme s'accélère (l'intervalle se resserre vers `Intervalle Battement Phase2`, ex: 0.6s ≈ 100 bpm)
 - Le joueur voit que les meubles et PNJ ont disparu
 
 **Ressenti joueur :** L'angoisse monte, la vision se réduit, on entend sa propre respiration.
@@ -108,11 +108,11 @@ Dès que le joueur interagit avec l'avatar dans B02 :
 **Quand :** Le joueur atteint le BoxCollider du WallSlide (le couloir commence à s'allonger).
 
 **Ce qui se passe :**
-- **Battement de cœur** → volume monte vers 1.0 (maximum), intervalle se resserre vers `Intervalle Battement Max` (ex: 0.35s ≈ 170 bpm) — le cœur bat **très souvent**
+- **Battement de cœur** → volume monte vers 1.0 (maximum), son rythme propre reste inchangé
 - **Respiration** → volume monte vers 1.0
 - **Vignette** → opacité monte vers `Opacite Vignette Max` (ex: 0.85)
-- **Shake caméra** → la caméra tremble à chaque battement (intensité monte vers `Intensite Shake`), au même instant que le son et la vibration
-- **Vibrations manettes** → intensité au maximum (`Intensite Vibration`) et impulsions au rythme le plus rapide, toujours synchronisées avec le son
+- **Shake caméra** → la caméra tremble à chaque impulsion (intensité monte vers `Intensite Shake`), au même instant que la vibration
+- **Vibrations manettes** → intensité au maximum (`Intensite Vibration`) et rythme le plus rapide (`Intervalle Battement Max`, ex: 0.35s ≈ 170 bpm), toujours synchronisées avec le shake
 - Le couloir s'allonge devant le joueur (géré par WallSlide)
 
 **Ressenti joueur :** Panique totale, le couloir n'en finit pas, la vision se trouble, tout vibre.
@@ -143,7 +143,7 @@ Les vitesses utilisent un **fondu exponentiel** (`Lerp` par frame). Plus la vale
 - **Attente de la Timeline** : Le BureauManager attend la fin de la Timeline en plus de l'AudioSource avant de considérer le dialogue comme terminé (l'audio de l'avatar peut être intégré dans la Timeline).
 - **Idempotence** : Appeler deux fois la même phase n'a aucun effet — la garde `if (phase >= X) return` empêche les doublons.
 - **Scintillement de la vignette** : La vignette noire n'est pas figée, elle utilise du bruit de Perlin pour un effet de scintillement organique.
-- **Pas de troncature audio** : le battement est un clip **court** rejoué via `PlayOneShot` (qui superpose les voix sans rien couper) plutôt qu'un long clip redémarré — voir l'avertissement dans la section setup.
+- **Pas de troncature audio** : le battement est un clip **long** joué une seule fois en boucle (`loop = true`), jamais redémarré — voir l'avertissement dans la section setup.
 
 ---
 

@@ -24,7 +24,6 @@ public class IntroManager : MonoBehaviour
 
     void Start()
     {
-        CreerEcran();
         StartCoroutine(LancerIntro());
     }
 
@@ -33,17 +32,19 @@ public class IntroManager : MonoBehaviour
         Camera cam = Camera.main;
 
         var goCanvas = new GameObject("EcranIntro");
-        goCanvas.transform.SetParent(cam.transform, false);
 
         var canvas = goCanvas.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
 
         float largeur = hauteurEcran * (16f / 9f);
         var rt = goCanvas.GetComponent<RectTransform>();
-        rt.localPosition = new Vector3(0f, 0f, distanceEcran);
-        rt.localRotation = Quaternion.identity;
         rt.sizeDelta = new Vector2(largeur * 100f, hauteurEcran * 100f);
         rt.localScale = Vector3.one * 0.01f;
+
+        // Pas de parent caméra : position fixée une seule fois dans l'espace du monde.
+        // Suivre la tête en rigide (comme avant) donne le mal des transports en VR.
+        rt.position = cam.transform.position + cam.transform.forward * distanceEcran;
+        rt.rotation = Quaternion.LookRotation(cam.transform.forward, Vector3.up);
 
         var goImage = new GameObject("VideoImage");
         goImage.transform.SetParent(goCanvas.transform, false);
@@ -73,10 +74,12 @@ public class IntroManager : MonoBehaviour
 
     IEnumerator LancerIntro()
     {
-        // Attendre la fin du FadeIn si FadeManager est présent
+        // Attendre la fin du FadeIn si FadeManager est présent — laisse aussi le temps
+        // à la pose de la caméra XR de se stabiliser avant de positionner l'écran (CreerEcran).
         if (FadeManager.Instance != null)
             yield return new WaitForSeconds(FadeManager.Instance.delaiDepart + FadeManager.Instance.dureeEntree);
 
+        CreerEcran();
         lecteurVideo.Play();
     }
 

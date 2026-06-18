@@ -36,6 +36,8 @@
 | `changementLumiere` | Optionnel — référence vers un `GameObjectSwapper` ; `Basculer()` est appelé automatiquement à la fin du dialogue (ex: désactiver un setup d'éclairage et activer un autre, pour la salle B02). |
 | `porte` | La porte de **cette** salle. |
 | `porteSuivante` | La porte de la salle suivante — verrouillée au démarrage (`Awake`), déverrouillée à la validation. |
+| `demarrageAutoALaPorte` | Optionnel — si coché, `DemarrerSalle()` se déclenche automatiquement à l'ouverture de `porte` (via l'event `Animee`), après `delaiDemarrageAutoPorte` secondes, sans interaction avec l'avatar. Utilisé pour AB42/A43 (dernière salle). |
+| `delaiDemarrageAutoPorte` | Délai (secondes) entre l'ouverture de `porte` et le démarrage automatique de la salle. |
 | `effetCouloir` | Optionnel, **normalement seulement sur la salle qui précède la séquence de panique** (B02 au moment de cette doc) — voir [`panique-effect.md`](./panique-effect.md). |
 | `delaiAvantBattementCoeur` | Délai (secondes) avant de déclencher la Phase 1 du `HallwayPanicEffect`. **À régler pour tomber vers la fin du dialogue**, indépendamment du nombre de lignes. |
 | `panneauDialogue` | Le `GameObject` du Canvas WorldSpace affichant le dialogue (un `CanvasGroup` y est ajouté automatiquement si absent). |

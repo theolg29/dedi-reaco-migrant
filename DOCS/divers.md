@@ -34,6 +34,8 @@ Utilisé par `IntroManager` pour le fondu de transition vers la scène de jeu.
 
 Joue une vidéo d'intro (avec son intégré) sur un écran World Space créé dynamiquement devant la caméra, puis charge la scène suivante (`sceneSuivante`) — avec un fondu via `FadeManager` si disponible.
 
+⚠️ **Confort VR** : l'écran est positionné **une seule fois** (au moment de sa création), dans l'espace du monde, à partir de la position/direction de la caméra à cet instant — il n'est **pas** parenté à la caméra. Un écran qui suit la tête de façon rigide à chaque frame donne le mal des transports ; un écran fixe dans l'espace (comme un vrai écran de cinéma) ne pose pas ce problème.
+
 | Champ | Rôle |
 |---|---|
 | `video` | Le `VideoClip` à jouer. |
