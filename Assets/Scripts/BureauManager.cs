@@ -86,6 +86,7 @@ public class BureauManager : MonoBehaviour
         {
             avatar.hoverEntered.AddListener(_ => survolAvatarActif = true);
             avatar.hoverExited.AddListener(_ => survolAvatarActif = false);
+            avatar.selectEntered.AddListener(_ => DemarrerSalle());
         }
     }
 
@@ -116,6 +117,7 @@ public class BureauManager : MonoBehaviour
 
     void DemarrerSalle()
     {
+        if (salleDemarree) return;
         salleDemarree = true;
 
         if (avatar != null)
