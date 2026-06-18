@@ -627,8 +627,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67c2a26e86fd14655942e6664505fab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IntroManager
-  video: {fileID: 32900000, guid: a0a47bd31696e482c92fd13b5cac6d8e, type: 3}
-  sceneSuivante: Theo
+  video: {fileID: 32900000, guid: 2324367261e7a4715b74881abe0e3762, type: 3}
+  sceneSuivante: 02_LaSceneDeGame
   distanceEcran: 3
   hauteurEcran: 2
 --- !u!4 &1227977560

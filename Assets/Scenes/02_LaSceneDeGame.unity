@@ -2419,7 +2419,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 748239710643081293, guid: 38f068d20c4cae84ea6ce0135bff6c3a, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3877025530316016204, guid: 38f068d20c4cae84ea6ce0135bff6c3a, type: 3}
       propertyPath: m_LocalScale.y
@@ -2467,7 +2467,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6822915286014580230, guid: 38f068d20c4cae84ea6ce0135bff6c3a, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7088789423196969760, guid: 38f068d20c4cae84ea6ce0135bff6c3a, type: 3}
       propertyPath: m_Icon
@@ -2483,7 +2483,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7088789423196969760, guid: 38f068d20c4cae84ea6ce0135bff6c3a, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2896,20 +2896,19 @@ MonoBehaviour:
   - {fileID: 970101050}
   - {fileID: 970101049}
   dureeDisparitionObjets: 15
-  sonBattementCoeur: {fileID: 8300000, guid: 5caed97fd61a3492c8838b6ebb798265, type: 3}
+  sonBattementCoeur: {fileID: 8300000, guid: a9cda24c1e5524fda8a3c425322142e2, type: 3}
   sonRespiration: {fileID: 8300000, guid: e680e930142fb4412900939c9779b1cc, type: 3}
-  intervalleBattement: 0.9
+  intervalleBattementDepart: 1
+  intervalleBattementPhase2: 0.6
+  intervalleBattementMax: 0.35
   volumeBattementDepart: 0.2
   volumeBattementMilieu: 0.35
   vitesseMonteeBattement: 0.5
-  pitchBattementDepart: 1
   volumeRespirationMilieu: 0.4
   opaciteVignetteMilieu: 0.25
   vitesseMonteeRespiration: 0.4
-  pitchBattementPhase2: 1.25
   intensiteVibrationPhase2: 0.15
   vitesseMonteeIntense: 0.3
-  pitchBattementMax: 1.6
   cibleShake: {fileID: 1947596246}
   intensiteShake: 0.03
   dureeShake: 0.12
@@ -15395,7 +15394,7 @@ MonoBehaviour:
   version: 2
   globalVolume: 0
   mode: 1
-  size: {x: 36.093506, y: 6.409108, z: 19.599983}
+  size: {x: 36.093506, y: 6.4091086, z: 19.599983}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -15433,7 +15432,7 @@ Transform:
   m_GameObject: {fileID: 2046444674}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.195887, y: 1.6005608, z: 8.389561}
+  m_LocalPosition: {x: 12.195887, y: 1.6005609, z: 8.389561}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17282,7 +17281,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!1 &2396003281349188907
 GameObject:
@@ -18629,7 +18628,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!33 &7697229304912557721
 MeshFilter:
