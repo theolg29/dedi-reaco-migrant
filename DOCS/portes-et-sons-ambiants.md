@@ -34,6 +34,8 @@ Porte interactive : survol + gâchette pour ouvrir/fermer, verrouillable par scr
 
 ⚠️ **Piège évité** : ne pas utiliser `CommonUsages.triggerButton` (flag digital) pour détecter l'appui gâchette — utiliser `CommonUsages.trigger` (valeur analogique) avec un seuil (`> 0.5f`), car le flag digital n'est pas remonté de façon fiable par tous les profils de contrôleurs OpenXR.
 
+⚠️ **Piège évité** : `Verrouiller()`/`Deverrouiller()` récupèrent le `XRSimpleInteractable` à la demande (`if (interactable == null) interactable = GetComponent<...>()`) plutôt que de compter uniquement sur le cache fait dans `Awake()`. Ces deux méthodes sont souvent appelées depuis le `Awake()` d'**un autre script** (`BureauManager` verrouille `porteSuivante` dès son propre démarrage) — or Unity ne garantit pas l'ordre d'exécution des `Awake()` entre deux GameObjects différents. Sans cette sécurité, si la porte n'a pas encore exécuté son propre `Awake()` au moment où `BureauManager` l'appelle, `interactable` est encore `null` → `NullReferenceException` qui interrompt silencieusement tout le reste du `Awake()` appelant (donc plus aucun listener d'avatar branché, plus aucune interaction possible dans la salle). Ce bug est apparu après une fusion de scènes qui a changé l'ordre d'instanciation des objets.
+
 ---
 
 ## DoorMuffledVolume.cs

@@ -10,7 +10,7 @@
 
 ### Déroulé complet
 
-1. **Le joueur survole l'avatar** et appuie sur la **gâchette** → `DemarrerSalle()`.
+1. **Le joueur survole l'avatar** et appuie sur la **gâchette** → `DemarrerSalle()`. Deux chemins déclenchent `DemarrerSalle()` en parallèle, tous deux protégés par le même verrou `salleDemarree` (idempotent) : la lecture manuelle de la gâchette analogique (`CommonUsages.trigger`, fiable avec un contrôleur physique) **et** l'event natif `avatar.selectEntered` (fiable aussi en hand-tracking, où il n'y a pas de gâchette physique à lire).
 2. `DemarrerSalle()` lance en parallèle :
    - La fermeture + verrouillage de la porte de la salle (`porte.Fermer()` / `porte.Verrouiller()`).
    - La disparition des objets du couloir si `effetCouloir` est assigné (`DemarrerDisparitionObjets()`).
@@ -47,6 +47,7 @@
 
 - **Ne jamais effacer le texte après les sécurités d'attente du son/Timeline** — sinon la dernière ligne reste figée à l'écran bien après sa `duree` prévue. Le texte doit être vidé **juste après la boucle de dialogue**, avant les `while` de sécurité.
 - **Ne jamais utiliser le bouton B (`CommonUsages.secondaryButton`)** pour la gâchette — le projet utilise `CommonUsages.trigger` (valeur analogique, seuil à 0.5) car le flag digital `triggerButton` n'est pas fiable sur tous les profils de contrôleurs OpenXR.
+- **`Awake()` appelle `porteSuivante.Verrouiller()`** — voir le piège correspondant dans [`portes-et-sons-ambiants.md`](./portes-et-sons-ambiants.md#doorinteractablecs) sur l'ordre d'exécution des `Awake()` entre scripts. Si une salle entière ne réagit plus à aucune interaction (alors que le highlight fonctionne toujours), suspecter en premier une exception silencieuse à cet endroit plutôt que le câblage de l'avatar.
 
 ---
 

@@ -45,12 +45,14 @@ public class DoorInteractable : MonoBehaviour
 
     public void Verrouiller()
     {
+        if (interactable == null) interactable = GetComponent<XRSimpleInteractable>();
         interactable.enabled = false;
         survolActif = false;
     }
 
     public void Deverrouiller()
     {
+        if (interactable == null) interactable = GetComponent<XRSimpleInteractable>();
         interactable.enabled = true;
     }
 
