@@ -14,7 +14,7 @@ Différent de `XRHoverHighlight` : ici, la surbrillance **clignote** et s'accomp
 
 ## HighlightSettings.cs
 
-`ScriptableObject` (menu `Reaco/Highlight Settings`) partagé entre `XRHoverHighlight`, `ButtonBIndicator` et `FeuilleRecuperable` : couleur + intensité d'émission. Modifier cet asset change la surbrillance **partout où il est assigné** — pratique pour garder une cohérence visuelle, mais attention à ne pas le modifier en pensant n'affecter qu'un seul objet.
+`ScriptableObject` (menu `Reaco/Highlight Settings`) partagé entre `XRHoverHighlight` et `ButtonBIndicator` : couleur + intensité d'émission. Modifier cet asset change la surbrillance **partout où il est assigné** — pratique pour garder une cohérence visuelle, mais attention à ne pas le modifier en pensant n'affecter qu'un seul objet.
 
 ## FadeManager.cs
 
@@ -45,6 +45,10 @@ Joue une vidéo d'intro (avec son intégré) sur un écran World Space créé dy
 Utilitaire de **développement uniquement** : active/désactive le GameObject du joystick de locomotion de l'XR Origin (`DynamicMoveProvider`). Pratique pour tester rapidement avec ou sans déplacement au joystick, en plus du déplacement physique.
 
 ⚠️ Ne pas laisser ce script désactiver la locomotion par erreur dans une build de test — vérifier `joystickActif` avant de partager une build.
+
+## GameObjectSwapper.cs
+
+Désactive un GameObject et active un autre, via la méthode publique `Basculer()`. Générique — utilisé par exemple par `BureauManager` (champ `changementLumiere`) pour basculer entre deux setups d'éclairage à la fin d'un dialogue, mais peut servir pour n'importe quel échange simple de deux objets.
 
 ## CanvasFaceCamera.cs
 
