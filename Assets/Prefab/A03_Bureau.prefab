@@ -252,7 +252,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1251421531109580503}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 16.13361, y: -1.38173, z: -22.803581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -290,13 +290,15 @@ MonoBehaviour:
   texteDialogue: {fileID: 8330124364057615012}
   dialogues:
   - texte: Bonjour. Vous avez les documents ?
-    duree: 2
+    duree: 2.3
   - texte: "Passeport, justificatif, formulaire, traduction, r\xE9c\xE9piss\xE9 pr\xE9c\xE9dent
       ?"
-    duree: 4
+    duree: 4.3
   - texte: "Il manque le formulaire de compl\xE9ment, dans ce cas, il faut passer
       au B02."
-    duree: 4
+    duree: 4.6
+  - texte: "C\u2019est juste en face, enfin\u2026l\xE0 bas l\xE0."
+    duree: 2.3
 --- !u!1 &1541588158995332231
 GameObject:
   m_ObjectHideFlags: 0
