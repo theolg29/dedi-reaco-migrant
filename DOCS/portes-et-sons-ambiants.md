@@ -66,7 +66,9 @@ Un GameObject "GestionSonCouloir" avec un `DoorMuffledVolume`, et dans `sources[
 
 ## SeatsDiscussion.cs
 
-Joue une séquence de répliques de couloir (figurants assis, etc.) : un clip différent à chaque passage du joueur dans son `BoxCollider`, dans l'ordre du tableau `clipsAudio[]`. Une fois tous les clips joués, ne fait plus rien.
+Joue une séquence de répliques de couloir (figurants assis, etc.) : à chaque passage du joueur dans son `BoxCollider`, la `Replique` suivante du tableau `repliques[]` est jouée — son `clip` (optionnel) et **toutes** les `timelines[]` associées, lancées ensemble (ex: une discussion entre deux personnages : un seul son de dialogue, mais les deux avatars animent en même temps). Si le son est déjà intégré dans une Timeline plutôt que sur un `AudioClip` séparé, laisser `clip` vide. Une fois toutes les répliques jouées, ne fait plus rien.
+
+⚠️ **Piège évité** : un verrou booléen (`discussionEnCours`) est posé **immédiatement et de façon synchrone** dès `OnTriggerEnter`, avant même de jouer le son/les timelines — ne jamais se fier uniquement à `AudioSource.isPlaying` ou `PlayableDirector.state` pour bloquer un double déclenchement, ces états peuvent ne pas être encore à jour si le trigger est touché deux fois dans la même frame (fréquent avec un `CharacterController` VR qui traverse la zone), ce qui laisserait les deux discussions se lancer en même temps. Le verrou n'est relâché qu'une fois le son **et** toutes les timelines de la réplique en cours effectivement terminés (coroutine `JouerReplique`).
 
 N'a **pas** sa propre logique de fondu — pour que ses sons s'étouffent aux portes, ajouter en plus un `DoorMuffledVolume` sur le même GameObject (avec son `AudioSource` dans la liste `sources[]`).
 

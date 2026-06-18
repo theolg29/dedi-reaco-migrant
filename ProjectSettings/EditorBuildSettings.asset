@@ -5,18 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/00_MainMenu.unity
     guid: 690bcc23235ab49e2918942f9d7bd89e
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/01_Intro.unity
     guid: be4351d40844f45188ecb148f37ba90e
-  - enabled: 0
-    path: Assets/Scenes/Theo.unity
-    guid: db1d96ef670ad459fb67201ce67d5995
   - enabled: 1
     path: Assets/Scenes/02_LaSceneDeGame.unity
     guid: 07552e72525e24d3b881073d50a0f58f
+  - enabled: 0
+    path: Assets/Scenes/Theo.unity
+    guid: db1d96ef670ad459fb67201ce67d5995
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type: 2}
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: dc5a169419fa04987b057f65238cf3ba, type: 2}
