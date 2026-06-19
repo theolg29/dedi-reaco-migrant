@@ -4004,6 +4004,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7087414558558558540, guid: a3862a85dc82a1e478bba0d9b5241d73, type: 3}
   m_PrefabInstance: {fileID: 696591074}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &706181267 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3452732688201793449, guid: 43514d1d9404d413ab291d11d5e76ae3, type: 3}
+  m_PrefabInstance: {fileID: 384911365774747539}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &715404862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13411,7 +13416,7 @@ MonoBehaviour:
   version: 2
   globalVolume: 0
   mode: 1
-  size: {x: 36.09351, y: 6.409108, z: 19.599983}
+  size: {x: 36.09351, y: 6.4091086, z: 19.599983}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -13449,7 +13454,7 @@ Transform:
   m_GameObject: {fileID: 2046444674}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.1958885, y: 1.6005607, z: 8.389561}
+  m_LocalPosition: {x: 12.1958885, y: 1.6005609, z: 8.389561}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13940,6 +13945,10 @@ PrefabInstance:
     - target: {fileID: 753678411086757968, guid: 43514d1d9404d413ab291d11d5e76ae3, type: 3}
       propertyPath: m_LocalPosition.z
       value: 5.803197
+      objectReference: {fileID: 0}
+    - target: {fileID: 928814985480535479, guid: 43514d1d9404d413ab291d11d5e76ae3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1587133435401501805, guid: 43514d1d9404d413ab291d11d5e76ae3, type: 3}
       propertyPath: m_LocalScale.x
@@ -14973,7 +14982,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -14.547, y: 1.622}
+  m_AnchoredPosition: {x: -14.547, y: 1.797}
   m_SizeDelta: {x: 600, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &1400257820762739770
@@ -15803,6 +15812,7 @@ MonoBehaviour:
   - {fileID: 5026786716936529701}
   - {fileID: 8616385896614772694}
   - {fileID: 5677025311140836130}
+  - {fileID: 706181267}
   dureeDisparitionObjets: 15
   sonBattementCoeur: {fileID: 8300000, guid: 5caed97fd61a3492c8838b6ebb798265, type: 3}
   sonRespiration: {fileID: 8300000, guid: e680e930142fb4412900939c9779b1cc, type: 3}
@@ -16010,6 +16020,9 @@ MonoBehaviour:
   bourragePapier: 0
   porte: {fileID: 6036170141226369812}
   porteSuivante: {fileID: 2734552112874952815}
+  demarrageAutoALaPorte: 0
+  delaiDemarrageAutoPorte: 1
+  fermerPorteAuDemarrage: 1
   changementLumiere: {fileID: 0}
   effetCouloir: {fileID: 0}
   delaiAvantBattementCoeur: 0
@@ -16240,6 +16253,9 @@ MonoBehaviour:
   bourragePapier: 0
   porte: {fileID: 7952885904502930064}
   porteSuivante: {fileID: 1279981156862772220}
+  demarrageAutoALaPorte: 1
+  delaiDemarrageAutoPorte: 2
+  fermerPorteAuDemarrage: 1
   changementLumiere: {fileID: 0}
   effetCouloir: {fileID: 0}
   delaiAvantBattementCoeur: 0
@@ -18838,6 +18854,9 @@ MonoBehaviour:
   bourragePapier: 1
   porte: {fileID: 2734552112874952815}
   porteSuivante: {fileID: 7952885904502930064}
+  demarrageAutoALaPorte: 0
+  delaiDemarrageAutoPorte: 1
+  fermerPorteAuDemarrage: 1
   changementLumiere: {fileID: 7261601210067497645}
   effetCouloir: {fileID: 2735209996093147163}
   delaiAvantBattementCoeur: 73
@@ -18868,7 +18887,7 @@ MonoBehaviour:
       et la concordance sur l\u2019indexation de la cat\xE9gorie de d\xE9p\xF4t ainsi
       que la sous-cat\xE9gorie d\u2019instruction sur le statut du r\xE9c\xE9piss\xE9
       pr\xE9c\xE9dent\u2026"
-    duree: 7.8
+    duree: 11.12
   - texte: "Voil\xE0. \xC9videmment. \xC7a fait trois fois ce matin. On nous demande
       de tout d\xE9mat\xE9rialiser, mais il faut quand m\xEAme tout imprimer"
     duree: 3.2
@@ -19393,7 +19412,7 @@ MonoBehaviour:
   couloirSortie: {fileID: 1443526720}
   effetPanique: {fileID: 2735209996093147163}
   axeCouloir: 0
-  deplacementTotal: 2.5
+  deplacementTotal: 5
   dureeDesespoir: 10
 --- !u!114 &7312440766911427714
 MonoBehaviour:
@@ -20703,7 +20722,7 @@ Transform:
   m_GameObject: {fileID: 6810363472621241973}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.25, y: 1.23, z: -1.4}
+  m_LocalPosition: {x: 0.73, y: 1.23, z: -1.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
