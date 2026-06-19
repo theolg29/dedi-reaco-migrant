@@ -15998,9 +15998,6 @@ MonoBehaviour:
   bourragePapier: 0
   porte: {fileID: 6036170141226369812}
   porteSuivante: {fileID: 2734552112874952815}
-  demarrageAutoALaPorte: 0
-  delaiDemarrageAutoPorte: 1
-  fermerPorteAuDemarrage: 1
   changementLumiere: {fileID: 0}
   effetCouloir: {fileID: 0}
   delaiAvantBattementCoeur: 0
@@ -16231,9 +16228,6 @@ MonoBehaviour:
   bourragePapier: 0
   porte: {fileID: 7952885904502930064}
   porteSuivante: {fileID: 1279981156862772220}
-  demarrageAutoALaPorte: 1
-  delaiDemarrageAutoPorte: 1
-  fermerPorteAuDemarrage: 0
   changementLumiere: {fileID: 0}
   effetCouloir: {fileID: 0}
   delaiAvantBattementCoeur: 0
@@ -18832,16 +18826,88 @@ MonoBehaviour:
   bourragePapier: 1
   porte: {fileID: 2734552112874952815}
   porteSuivante: {fileID: 7952885904502930064}
-  demarrageAutoALaPorte: 0
-  delaiDemarrageAutoPorte: 1
-  fermerPorteAuDemarrage: 1
   changementLumiere: {fileID: 7261601210067497645}
   effetCouloir: {fileID: 2735209996093147163}
   delaiAvantBattementCoeur: 73
   panneauDialogue: {fileID: 5189083699502186416}
   dureeTransition: 0.4
   texteDialogue: {fileID: 2133084080851367818}
-  dialogues: []
+  dialogues:
+  - texte: "Oui, c\u2019est pour le compl\xE9ment A03, je suppose."
+    duree: 2.3
+  - texte: "Alors\u2026 on vous a envoy\xE9 pour une \xE9dition de formulaire compl\xE9mentaire,
+      mais \xE9videmment ce n\u2019est jamais seulement une \xE9dition de formulaire
+      compl\xE9mentaire."
+    duree: 5.9
+  - texte: "Il faut d\u2019abord v\xE9rifier que le dossier est bien rattach\xE9
+      au flux de traitement correspondant \xE0 la nature de la demande,"
+    duree: 4.2
+  - texte: " sinon le document sort, mais il n\u2019est pas recevable."
+    duree: 2.3
+  - texte: "L\xE0, je vois une demande initiale reprise en compl\xE9ment d\u2019instruction. "
+    duree: 3.3
+  - texte: "Donc d\xE9j\xE0, ce n\u2019est pas le m\xEAme circuit. Et \xE9tant donn\xE9
+      que ce n\u2019est pas le m\xEAme circuit, je ne peux pas juste imprimer.  "
+    duree: 3.8
+  - texte: "Enfin, je peux, mais \xE7a reviendra bloqu\xE9. Et apr\xE8s, \xE9videmment,
+      c\u2019est encore ici que \xE7a revient."
+    duree: 4.5
+  - texte: "Vous voyez, le probl\xE8me, c\u2019est le rattachement. Le rattachement
+      et la concordance sur l\u2019indexation de la cat\xE9gorie de d\xE9p\xF4t ainsi
+      que la sous-cat\xE9gorie d\u2019instruction sur le statut du r\xE9c\xE9piss\xE9
+      pr\xE9c\xE9dent\u2026"
+    duree: 7.8
+  - texte: "Voil\xE0. \xC9videmment. \xC7a fait trois fois ce matin. On nous demande
+      de tout d\xE9mat\xE9rialiser, mais il faut quand m\xEAme tout imprimer"
+    duree: 3.2
+  - texte: "d\xE8s que le dossier ne rentre pas exactement dans la bonne case."
+    duree: 3.7
+  - texte: "Et l\xE0, bien entendu, votre dossier ne rentre pas dans la bonne case."
+    duree: 3.2
+  - texte: "Votre pi\xE8ce justificative est pr\xE9sente. Mais elle n\u2019est pas
+      align\xE9e avec l\u2019intitul\xE9 demand\xE9 par le service instructeur."
+    duree: 5.4
+  - texte: "Donc administrativement, ce n\u2019est pas absent. Mais ce n\u2019est
+      pas conforme non plus."
+    duree: 4
+  - texte: "Et quand ce n\u2019est ni absent, ni conforme, ni exploitable dans le
+      circuit standard, \xE7a part en v\xE9rification compl\xE9mentaire."
+    duree: 6.1
+  - texte: "De toute fa\xE7on c\u2019est toujours pareil. Les gens pensent qu\u2019il
+      manque un papier. Mais non. Parfois le papier est l\xE0. C\u2019est juste qu\u2019il
+      n\u2019est pas lisible par la proc\xE9dure."
+    duree: 6.3
+  - texte: "Et si la proc\xE9dure ne le lit pas, moi je ne peux pas l\u2019inventer."
+    duree: 2.5
+  - texte: "Non. \xC7a, c\u2019est la mauvaise version. La \xE7a vous sort le mod\xE8le
+      standard, mais votre situation d\xE9pend du traitement compl\xE9mentaire. "
+    duree: 4.8
+  - texte: "Donc ce document-l\xE0, en l\u2019\xE9tat, ne sert \xE0 rien."
+    duree: 2.3
+  - texte: "Il faut une validation de concordance. Nom, pr\xE9nom, date de naissance,
+      justificatif, traduction, ancien r\xE9c\xE9piss\xE9,"
+    duree: 5.1
+  - texte: "num\xE9ro de dossier, num\xE9ro \xE9tranger, identifiant plateforme,
+      date de d\xE9p\xF4t, statut de la demande, motif d\u2019anomalie\u2026"
+    duree: 5
+  - texte: 'Tout doit correspondre exactement. '
+    duree: 1.9
+  - texte: "Et l\xE0, il y a une diff\xE9rence de libell\xE9. Ce n\u2019est pas \xE9norme,
+      mais c\u2019est suffisant pour bloquer."
+    duree: 3.6
+  - texte: "De toute fa\xE7on, ce n\u2019est pas grave. Ce n\u2019est pas \xE0 moi
+      de corriger \xE7a ici, je ne peux pas valider un document si le rattachement
+      n\u2019est pas propre. "
+    duree: 4.8
+  - texte: "Je ne peux pas \xE9diter le compl\xE9ment tant que le dossier n\u2019est
+      pas confirm\xE9 en anomalie de traitement."
+    duree: 3.6
+  - texte: "Vous allez au A43 au fond du couloir. Ils v\xE9rifieront si le dossier
+      peut \xEAtre repris dans le bon circuit."
+    duree: 4.3
+  - texte: "Vous avez presque tout, mais malheureusement presque tout, ici, \xE7a
+      ne suffit pas."
+    duree: 4.5
 --- !u!114 &6384640832644592447
 MonoBehaviour:
   m_ObjectHideFlags: 0
