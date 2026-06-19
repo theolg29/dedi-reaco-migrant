@@ -8172,7 +8172,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6987630298804898342, guid: 43514d1d9404d413ab291d11d5e76ae3, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6987630298804898342, guid: 43514d1d9404d413ab291d11d5e76ae3, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -13411,7 +13411,7 @@ MonoBehaviour:
   version: 2
   globalVolume: 0
   mode: 1
-  size: {x: 42.061775, y: 6.409108, z: 39.631348}
+  size: {x: 36.09351, y: 6.409108, z: 19.599983}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -13449,7 +13449,7 @@ Transform:
   m_GameObject: {fileID: 2046444674}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.211756, y: 1.6005607, z: -1.6261196}
+  m_LocalPosition: {x: 12.1958885, y: 1.6005607, z: 8.389561}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14295,7 +14295,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6987630298804898342, guid: 43514d1d9404d413ab291d11d5e76ae3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7244022064207502004, guid: 43514d1d9404d413ab291d11d5e76ae3, type: 3}
       propertyPath: m_IsTrigger
