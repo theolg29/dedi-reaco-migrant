@@ -14,7 +14,7 @@ public class HallwayPanicEffect : MonoBehaviour
     public float dureeDisparitionObjets = 15f;
 
     [Header("Sons")]
-    [Tooltip("Son du battement de cœur : un clip COURT contenant un battement complet \"lub-dub\" (deux pulsations), rejoué à intervalle régulier — pas une ambiance longue en boucle")]
+    [Tooltip("Son du battement de cœur : une ambiance longue (~10-15s), jouée en boucle en continu dès la Phase 1 — son propre rythme reste fixe, seul le volume monte selon la phase")]
     public AudioClip sonBattementCoeur;
     [Tooltip("Son de respiration, joué en boucle pendant toute la séquence")]
     public AudioClip sonRespiration;
@@ -101,6 +101,8 @@ public class HallwayPanicEffect : MonoBehaviour
 
         sourceBattement = gameObject.AddComponent<AudioSource>();
         sourceBattement.playOnAwake = false;
+        sourceBattement.loop = true;
+        sourceBattement.clip = sonBattementCoeur;
 
         sourceRespiration = gameObject.AddComponent<AudioSource>();
         sourceRespiration.playOnAwake = false;
@@ -177,6 +179,9 @@ public class HallwayPanicEffect : MonoBehaviour
         if (phase >= 1) return;
         phase = 1;
         ObtenirManettes();
+
+        if (sonBattementCoeur != null)
+            sourceBattement.Play();
 
         StartCoroutine(BoucleBattement());
     }
@@ -285,11 +290,8 @@ public class HallwayPanicEffect : MonoBehaviour
     {
         while (phase >= 1)
         {
-            // Son + vibration + shake déclenchés ensemble, au même instant : synchronisation garantie.
+            // Vibration + shake déclenchés au rythme du cœur ; le son (ambiance longue en boucle) tourne en continu, indépendamment de ce rythme.
             // Le shake caméra reste réservé à la phase 3 (intensité max).
-            if (sonBattementCoeur != null)
-                sourceBattement.PlayOneShot(sonBattementCoeur);
-
             if (manetteDroite.isValid)
                 manetteDroite.SendHapticImpulse(0, intensiteVibrationActuelle, dureeVibration);
             if (manetteGauche.isValid)

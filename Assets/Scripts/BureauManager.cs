@@ -28,6 +28,14 @@ public class BureauManager : MonoBehaviour
     [Tooltip("La porte de la salle suivante à déverrouiller une fois cette salle validée")]
     public DoorInteractable porteSuivante;
 
+    [Header("Démarrage auto à l'ouverture (salle A43 uniquement)")]
+    [Tooltip("Si coché, la salle démarre automatiquement à l'ouverture de 'porte', sans interaction avec l'avatar (ex: dernière salle)")]
+    public bool demarrageAutoALaPorte = false;
+    [Tooltip("Délai après l'ouverture de la porte avant le démarrage automatique, en secondes")]
+    public float delaiDemarrageAutoPorte = 1f;
+    [Tooltip("Décocher si le joueur vient juste d'ouvrir 'porte' pour entrer (sinon elle se referme sur lui dès le démarrage de la salle)")]
+    public bool fermerPorteAuDemarrage = true;
+
     [Header("Changement d'éclairage (optionnel)")]
     [Tooltip("Optionnel — bascule entre deux GameObjects (ex: deux setups d'éclairage) à la fin du dialogue")]
     public GameObjectSwapper changementLumiere;
@@ -88,6 +96,15 @@ public class BureauManager : MonoBehaviour
             avatar.hoverExited.AddListener(_ => survolAvatarActif = false);
             avatar.selectEntered.AddListener(_ => DemarrerSalle());
         }
+
+        if (demarrageAutoALaPorte && porte != null)
+            porte.Animee += (vaOuvrir, duree) => { if (vaOuvrir) StartCoroutine(DemarrerSalleApresDelai()); };
+    }
+
+    IEnumerator DemarrerSalleApresDelai()
+    {
+        yield return new WaitForSeconds(delaiDemarrageAutoPorte);
+        DemarrerSalle();
     }
 
     void Update()
@@ -125,7 +142,8 @@ public class BureauManager : MonoBehaviour
 
         if (porte != null)
         {
-            porte.Fermer();
+            if (fermerPorteAuDemarrage)
+                porte.Fermer();
             porte.Verrouiller();
         }
 

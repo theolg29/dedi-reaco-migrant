@@ -19,7 +19,9 @@ Porte interactive : survol + gâchette pour ouvrir/fermer, verrouillable par scr
 | `Fermer()` | Lance l'animation de fermeture si la porte est actuellement ouverte. |
 | `InverserSens()` | Inverse le sens d'ouverture pour la prochaine animation (utilisé quand une salle est validée, pour que la porte s'ouvre "vers la sortie"). |
 | `EstOuverte` | `true`/`false` selon l'état actuel. |
-| `event Animee` | Invoqué à chaque animation `(bool vaOuvrir, float dureeAnimation)` — pour qu'un script tiers (ex: `FanRotator`) réagisse à **cette porte précise**. |
+| `event Animee` | Invoqué à chaque animation `(bool vaOuvrir, float dureeAnimation)` — pour qu'un script tiers (ex: `FanRotator`, `EndDoor`) réagisse à **cette porte précise**. |
+
+> Pour une porte sans rotation visible (ex: la porte de fin `EndDoor`, qui doit enchaîner directement sur le changement de scène), mettre `angleOuverture` à **0** plutôt que d'ajouter un flag dédié — la porte "s'ouvre" sans aucun mouvement perceptible, le son et l'event `Animee` continuent de se déclencher normalement.
 
 ### Ce qui se passe à chaque animation (`AnimerPorte`)
 
