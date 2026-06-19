@@ -18,14 +18,14 @@ public class WallSlide : MonoBehaviour
     public Axe axeCouloir = Axe.X;
 
     [Header("Effet de désespoir")]
-    [Tooltip("Distance totale que le couloir va parcourir (en unités Unity)")]
+    [Tooltip("Distance totale que le couloir peut parcourir (en unités Unity)")]
     public float deplacementTotal = 10f;
-    [Tooltip("Durée (en secondes de marche) pour parcourir cette distance")]
-    public float dureeDesespoir = 20f;
+    [Tooltip("Multiplicateur de vitesse : le couloir avance plus vite que le joueur si > 1")]
+    [SerializeField] private float vitesseDeplacement = 1f;
 
     private Vector3 posDepart;
-    private Vector3 dernierePosJoueur;
-    private float tempsMarche = 0f;
+    private float posJoueurDepart;
+    private float offsetMax = 0f;
     private bool actif = false;
 
     void Awake()
@@ -36,15 +36,17 @@ public class WallSlide : MonoBehaviour
     void Start()
     {
         posDepart = couloirSortie.position;
-        dernierePosJoueur = joueur.position;
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
         if (!ConditionsValidees()) return;
+        if (actif) return;
 
         actif = true;
+        posJoueurDepart = PositionSurAxe(joueur.position);
+        offsetMax = 0f;
 
         if (effetPanique != null)
             effetPanique.DemarrerIntensiteMax();
@@ -56,34 +58,28 @@ public class WallSlide : MonoBehaviour
         return true;
     }
 
+    float PositionSurAxe(Vector3 position)
+    {
+        return axeCouloir == Axe.X ? position.x
+             : axeCouloir == Axe.Y ? position.y
+             : position.z;
+    }
+
     void Update()
     {
         if (!actif) return;
 
-        float posActuelle = axeCouloir == Axe.X ? joueur.position.x
-                          : axeCouloir == Axe.Y ? joueur.position.y
-                          : joueur.position.z;
+        float deltaDepuisDebut = (PositionSurAxe(joueur.position) - posJoueurDepart) * vitesseDeplacement;
+        float offsetSouhaite = Mathf.Clamp(deltaDepuisDebut, 0f, deplacementTotal);
 
-        float posPrec = axeCouloir == Axe.X ? dernierePosJoueur.x
-                      : axeCouloir == Axe.Y ? dernierePosJoueur.y
-                      : dernierePosJoueur.z;
+        // Le couloir ne recule jamais, même si le joueur recule.
+        offsetMax = Mathf.Max(offsetMax, offsetSouhaite);
 
-        float deltaAvant = posActuelle - posPrec;
-
-        if (deltaAvant > 0f)
+        couloirSortie.position = posDepart + axeCouloir switch
         {
-            tempsMarche += Time.deltaTime;
-            float t = Mathf.Clamp01(tempsMarche / dureeDesespoir);
-            float offset = Mathf.Lerp(0f, deplacementTotal, t);
-
-            couloirSortie.position = posDepart + axeCouloir switch
-            {
-                Axe.X => new Vector3(offset, 0f, 0f),
-                Axe.Y => new Vector3(0f, offset, 0f),
-                _     => new Vector3(0f, 0f, offset),
-            };
-        }
-
-        dernierePosJoueur = joueur.position;
+            Axe.X => new Vector3(offsetMax, 0f, 0f),
+            Axe.Y => new Vector3(0f, offsetMax, 0f),
+            _     => new Vector3(0f, 0f, offsetMax),
+        };
     }
 }

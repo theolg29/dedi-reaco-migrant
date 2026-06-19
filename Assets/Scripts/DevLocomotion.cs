@@ -9,9 +9,15 @@ public class DevLocomotion : MonoBehaviour
     [Tooltip("Le GameObject 'Move' de l'XR Origin (contient le DynamicMoveProvider)")]
     public GameObject locomotionJoystick;
 
+    [Tooltip("Le GameObject 'Turn' de l'XR Origin (contient le SnapTurnProvider et le ContinuousTurnProvider)")]
+    public GameObject locomotionRotationJoystick;
+
     void Awake()
     {
-        if (locomotionJoystick == null) return;
-        locomotionJoystick.SetActive(joystickActif);
+        if (locomotionJoystick != null)
+            locomotionJoystick.SetActive(joystickActif);
+
+        if (locomotionRotationJoystick != null)
+            locomotionRotationJoystick.SetActive(joystickActif);
     }
 }
