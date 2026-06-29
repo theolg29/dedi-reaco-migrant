@@ -13218,7 +13218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b168e5f03c48419f9ef0d4bcfad4819, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DevLocomotion
-  joystickActif: 1
+  joystickActif: 0
   locomotionJoystick: {fileID: 1947596248}
   locomotionRotationJoystick: {fileID: 1327408930}
 --- !u!114 &1947596263
@@ -13466,7 +13466,7 @@ MonoBehaviour:
   version: 2
   globalVolume: 0
   mode: 1
-  size: {x: 36.09351, y: 6.409108, z: 19.599983}
+  size: {x: 36.09351, y: 6.4091086, z: 19.599983}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -13504,7 +13504,7 @@ Transform:
   m_GameObject: {fileID: 2046444674}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.1958885, y: 1.6005607, z: 8.389561}
+  m_LocalPosition: {x: 12.1958885, y: 1.6005609, z: 8.389561}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
